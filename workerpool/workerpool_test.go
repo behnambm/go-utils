@@ -7,28 +7,28 @@ import (
 )
 
 func TestNewWorkerPool_NoError(t *testing.T) {
-	_, err := NewWorkerPool(1, 1)
+	_, err := New(1, 1)
 	if err != nil {
 		t.Fatal("returned error - should not return errors")
 	}
 }
 
 func TestNewWorkerPool_NoWorkerErr(t *testing.T) {
-	_, err := NewWorkerPool(0, 1)
+	_, err := New(0, 1)
 	if err != ErrNoWorkers {
 		t.Fatal("returned invalid error - should return ErrNoWorkers")
 	}
 }
 
 func TestNewWorkerPool_NegativeBufferSizeErr(t *testing.T) {
-	_, err := NewWorkerPool(1, -1)
+	_, err := New(1, -1)
 	if err != ErrNegativeBufferSize {
 		t.Fatal("returned invalid error - should return ErrNegativeBufferSize")
 	}
 }
 
 func TestNewWorkerPool_StartAndStopOnce(t *testing.T) {
-	wp, _ := NewWorkerPool(1, 1)
+	wp, _ := New(1, 1)
 
 	wp.Start()
 	wp.Start()
@@ -38,7 +38,7 @@ func TestNewWorkerPool_StartAndStopOnce(t *testing.T) {
 }
 
 func TestNewWorkerPool_GoroutineCount(t *testing.T) {
-	wp, err := NewWorkerPool(20, 1)
+	wp, err := New(20, 1)
 	if err != nil {
 		t.Fatal("returned error - should not return errors")
 	}
@@ -52,7 +52,7 @@ func TestNewWorkerPool_GoroutineCount(t *testing.T) {
 }
 
 func TestNewWorkerPool_AddTask(t *testing.T) {
-	wp, _ := NewWorkerPool(1, 1)
+	wp, _ := New(1, 1)
 	wp.Start()
 
 	counter := 0
@@ -70,7 +70,7 @@ func TestNewWorkerPool_AddTask(t *testing.T) {
 }
 
 func TestNewWorkerPool_WaitUntilDone(t *testing.T) {
-	wp, _ := NewWorkerPool(1, 1)
+	wp, _ := New(1, 1)
 	wp.Start()
 
 	increaseCounter := func() {
@@ -90,7 +90,7 @@ func TestNewWorkerPool_WaitUntilDone(t *testing.T) {
 
 func TestNewWorkerPool_TaskRun_OneWorker(t *testing.T) {
 	// this task should wait for 1 seconds
-	wp, _ := NewWorkerPool(1, 0)
+	wp, _ := New(1, 0)
 	wp.Start()
 
 	increaseCounter := func() {
@@ -114,7 +114,7 @@ func TestNewWorkerPool_TaskRun_OneWorker(t *testing.T) {
 func TestNewWorkerPool_BlockingAddTask_OneWorker(t *testing.T) {
 	// set 1 as worker count so the tasks will be processed one by one
 	// this task should wait for 1 second to AddTask and 2 seconds in total
-	wp, _ := NewWorkerPool(1, 0)
+	wp, _ := New(1, 0)
 	wp.Start()
 
 	increaseCounter := func() {
@@ -144,7 +144,7 @@ func TestNewWorkerPool_BlockingAddTask_OneWorker(t *testing.T) {
 func TestNewWorkerPool_NonBlockingAddTask_OneWorker_OneBuffer(t *testing.T) {
 	// set 1 as worker count and 1 as buffer size
 	// this task should not wait to AddTask and should wait 2 seconds in total
-	wp, _ := NewWorkerPool(1, 1)
+	wp, _ := New(1, 1)
 	wp.Start()
 
 	increaseCounter := func() {
@@ -174,7 +174,7 @@ func TestNewWorkerPool_NonBlockingAddTask_OneWorker_OneBuffer(t *testing.T) {
 func TestNewWorkerPool_NonBlockingAddTask_TwoWorker_OneBuffer(t *testing.T) {
 	// set 2 as worker count and 1 as buffer size
 	// this task should not wait to AddTask and should wait 1 seconds in total
-	wp, _ := NewWorkerPool(2, 1)
+	wp, _ := New(2, 1)
 	wp.Start()
 
 	increaseCounter := func() {

@@ -22,7 +22,7 @@ type WorkerPool struct {
 	wg          sync.WaitGroup
 }
 
-func NewWorkerPool(workerCount, bufferSize int) (*WorkerPool, error) {
+func New(workerCount, bufferSize int) (*WorkerPool, error) {
 	if workerCount < 1 {
 		return nil, ErrNoWorkers
 	}

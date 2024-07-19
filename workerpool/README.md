@@ -21,7 +21,7 @@ func myTask() {
 
 func main() {
 	// Create a new worker pool with 1 worker and an unbuffered channel
-	wp, _ := workerpool.NewWorkerPool(1, 0) 
+	wp, _ := workerpool.New(1, 0) 
 	wp.Start()
 
 	// Add tasks to the worker pool
