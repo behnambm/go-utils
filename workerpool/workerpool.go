@@ -58,18 +58,12 @@ func (wp *WorkerPool) startWorkers() {
 
 	for i := 0; i < wp.workerCount; i++ {
 		go func(workerIdx int) {
-			defer func() {
-				//log.Printf("stopping worker #%d \n", workerIdx)
-			}()
-
 			for {
 				select {
 				case <-wp.done:
 					return
 				case task, ok := <-wp.taskCh:
-					//log.Println("started to process")
 					if !ok {
-						//log.Printf("stopping worker %d with closed tasks channel\n", workerIdx)
 						return
 					}
 					task()
